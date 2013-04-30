@@ -28,7 +28,7 @@ Updating is as simple as `bundle update undeletable`.
 
 ```ruby
 Undeletable.configure do
-  # if true, debug log failed attempts to delete/destroy the models when not raising error
+  # if true, debug log failed attempts to delete/destroy when not raising error
   self.debug = false
 end
 
