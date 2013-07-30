@@ -3,15 +3,35 @@ require 'undeletable/version'
 module Undeletable
   class << self
     attr_accessor :debug
-    def configure(&blk); class_eval(&blk); end
+    def configure(&blk)
+      class_eval(&blk)
+    end
   end
 
-  def self.included(klazz)
-    klazz.extend Query
+  extend ActiveSupport::Concern
+
+  module ClassMethods
+    def undeletable?
+      true
+    end
+    
+    def delete(id_or_array)
+      raise ActiveRecord::ReadOnlyRecord.new("#{self} is undeletable") if self.raise_on_delete
+      logger.debug("will not delete #{self}", e) if Undeletable.debug
+    end
+    
+    def delete_all(conditions = nil)
+      raise ActiveRecord::ReadOnlyRecord.new("#{self} is undeletable") if self.raise_on_delete
+      logger.debug("will not delete #{self}", e) if Undeletable.debug
+    end
   end
 
-  module Query
-    def undeletable? ; true ; end
+  def force_destroy
+    run_callbacks(:destroy) { force_delete }
+  end
+
+  def force_delete
+    self.class.force_delete(send(self.class.primary_key))
   end
 
   def destroy
@@ -19,16 +39,24 @@ module Undeletable
     logger.debug("will not delete #{self}", e) if Undeletable.debug
     run_callbacks(:destroy) { delete }
   end
-
+  
   def delete
     raise ActiveRecord::ReadOnlyRecord.new("#{self} is undeletable") if self.raise_on_delete
     logger.debug("will not delete #{self}", e) if Undeletable.debug
   end
 
-  # I'm hoping this won't fail checks!
-  #def destroyed?
-  #end
-  #alias :deleted? :destroyed?
+end
+
+module UndeletableRails4Extensions
+  extend ActiveSupport::Concern
+
+  included do
+    alias_method :force_destroy!, :destroy!
+  end
+
+  def destroy!
+    raise ActiveRecord::RecordNotDestroyed.new("#{self} is undeletable")
+  end
 end
 
 Undeletable.configure do
@@ -36,22 +64,34 @@ Undeletable.configure do
 end
 
 class ActiveRecord::Base
+
   def self.undeletable(args = nil)
     class_attribute :raise_on_delete, instance_writer: true
-    self.raise_on_delete = false
-    alias :destroy! :destroy
-    alias :delete!  :delete
+    class << self
+      alias_method :force_delete, :delete
+      alias_method :force_delete_all, :delete_all
+    end
     include Undeletable
+    include UndeletableRails4Extensions if defined?(ActiveRecord::VERSION::MAJOR) && ActiveRecord::VERSION::MAJOR > 3
   end
 
   def self.undeletable!(args = nil)
     class_attribute :raise_on_delete, instance_writer: true
     self.raise_on_delete = true
-    alias :destroy! :destroy
-    alias :delete!  :delete
+    class << self
+      alias_method :force_delete, :delete
+      alias_method :force_delete_all, :delete_all
+    end
     include Undeletable
+    include UndeletableRails4Extensions if defined?(ActiveRecord::VERSION::MAJOR) && ActiveRecord::VERSION::MAJOR > 3
   end
 
-  def self.undeletable? ; false ; end
-  def undeletable? ; self.class.undeletable? ; end
+  def self.undeletable?
+    false
+  end
+
+  def undeletable?
+    self.class.undeletable?
+  end
+  
 end

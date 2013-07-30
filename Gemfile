@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in undeletable.gemspec
 gemspec
+
+gem 'appraisal', '~> 0.5.2'

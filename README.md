@@ -1,10 +1,14 @@
+[![Build Status](https://secure.travis-ci.org/FineLinePrototyping/undeletable.png?branch=master)][travis] [![Gem Version](https://badge.fury.io/rb/undeletable.png)][badgefury]
+
 # Undeletable
 
-The `undeletable` class method disables the ability to `delete`/`destroy` an ActiveRecord model instance, and `undeletable!` raises an error if a `delete`/`destroy!` is attempted. Can support destroy callbacks if raise not enabled.
+The `undeletable` class method disables the ability to `delete`/`destroy` an ActiveRecord model instance or `delete`/`delete_all` via the model's class, and `undeletable!` raises an error when those are attempted. Can support destroy callbacks if raise not enabled.
 
-Similar to paranoid/acts_as_paranoid, the bang methods, `destroy!` and `delete!` are provided in case the original destroy/delete methods are needed.
+`force_destroy`/`force_delete`/`force_delete_all` are provided in case the original destroy/delete/delete_all methods must be called.
 
-Undeletable is a fork of [Paranoia][paranoia] (by Ryan Bigg and others) but heavily modified to just disallow normal deletion.
+This gem is tested against ActiveRecord 3.1.x, 3.2.x, and 4.0.x.
+
+Undeletable was originally based on [Paranoia][paranoia] (by Ryan Bigg and others), but very heavily modified.
 
 ## Installation & Usage
 
@@ -57,8 +61,13 @@ class Client < ActiveRecord::Base
 end
 ```
 
+## Upgrading
+
+v0.0.1 of the gem aliased to create destroy! and delete! methods, but ActiveRecord v4 now has a [destroy!][rails4_destroy] method, so to avoid conflicts and be consistent, we've switch to force_* names for methods.
+
 ## License
 
 This gem is released under the MIT license.
 
+[rails4_destroy]: https://github.com/rails/rails/blob/v4.0.0/activerecord/lib/active_record/persistence.rb#L169
 [paranoia]: https://github.com/radar/paranoia
