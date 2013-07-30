@@ -1,5 +1,6 @@
-pkg/*
-*.gem
-.bundle
-tmp
+.bundle/
 .rvmrc
+gemfiles/
+pkg/*
+tmp/
+*.gem
