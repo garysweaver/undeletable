@@ -67,7 +67,10 @@ v0.0.1 of the gem aliased to create destroy! and delete! methods, but ActiveReco
 
 ## License
 
-This gem is released under the MIT license.
+This gem is released under the [MIT license][lic].
 
+[lic]: http://github.com/FineLinePrototyping/undeletable/blob/master/LICENSE
 [rails4_destroy]: https://github.com/rails/rails/blob/v4.0.0/activerecord/lib/active_record/persistence.rb#L169
 [paranoia]: https://github.com/radar/paranoia
+[travis]: http://travis-ci.org/FineLinePrototyping/undeletable
+[badgefury]: http://badge.fury.io/rb/undeletable
