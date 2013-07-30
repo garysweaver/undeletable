@@ -2,5 +2,9 @@ language: ruby
 rvm:
   - 2.0.0
   - 1.9.3
-# Don't list gemfiles here. Wildcards not supported so would have to keep in sync with each name in gemfiles/*.
-# This results in less work for Travis CI and faster feedback for us, even if it means we stop on first failed appraisal.
+# change also in Appraisals
+gemfile:
+  - gemfiles/activerecord_4.0.gemfile
+  - gemfiles/activerecord_3.2.gemfile
+  - gemfiles/activerecord_3.1.gemfile
+script: "bundle exec rake"
