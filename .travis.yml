@@ -1,10 +1,5 @@
 language: ruby
 rvm:
-  - 2.0.0
+  - 1.9.2
   - 1.9.3
-# change also in Appraisals
-gemfile:
-  - gemfiles/activerecord_4.0.gemfile
-  - gemfiles/activerecord_3.2.gemfile
-  - gemfiles/activerecord_3.1.gemfile
-script: "bundle exec rake"
+  - 2.0.0

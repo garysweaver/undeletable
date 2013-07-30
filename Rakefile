@@ -1,16 +1,18 @@
+# encoding: utf-8
+
+require 'rubygems'
 require 'bundler/setup'
 require 'bundler/gem_tasks'
+
+require 'rake'
 require 'appraisal'
 
-task :default do |t|
-  if ENV['BUNDLE_GEMFILE'] =~ /gemfiles/
-    #exec 'rake spec'
-    load 'test/undeletable_test.rb'
-  else
-    exec 'rake appraise'
-  end
+task :default => [:all]
+
+task :test do |t|
+  load 'test/undeletable_test.rb'
 end
 
-task :appraise => ['appraisal:install'] do |t|
-  exec 'rake appraisal'
+task all: ['appraisal:install'] do |t|
+  exec 'rake appraisal test'
 end

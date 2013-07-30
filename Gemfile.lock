@@ -42,7 +42,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  appraisal (~> 0.5.2)
-  bundler (>= 1.2.2)
+  appraisal
   sqlite3
   undeletable!
