@@ -56,26 +56,6 @@ class UndeletableTest < Test::Unit::TestCase
     assert_equal true,  PlainModel.new.respond_to?(:destroy)
   end
 
-  def test_plain_class_does_not_have_force_delete
-    assert_equal false, PlainModel.respond_to?(:force_delete), "Did not expect PlainModel class to have force_destroy method: #{PlainModel.method(:force_destroy)}"
-  rescue NameError
-  end
-
-  def test_plain_class_does_not_have_force_delete_all
-    assert_equal false, PlainModel.respond_to?(:force_delete_all), "Did not expect PlainModel class to have force_delete_all method: #{PlainModel.method(:force_delete_all)}"
-  rescue NameError
-  end
-
-  def test_plain_instance_does_not_have_force_delete
-    assert_equal false, PlainModel.new.respond_to?(:force_delete), "Did not expect PlainModel instance to have force_delete method: #{PlainModel.new.method(:force_delete)}"
-  rescue NameError
-  end
-
-  def test_plain_instance_does_not_have_force_destroy
-    assert_equal false, PlainModel.new.respond_to?(:force_destroy), "Did not expect PlainModel instance to have force_destroy method: #{PlainModel.new.method(:force_destroy)}"
-  rescue NameError
-  end
-
   def test_plain_model_instance_is_not_marked_undeletable
     assert_equal false, PlainModel.new.undeletable?
   end
@@ -85,22 +65,6 @@ class UndeletableTest < Test::Unit::TestCase
   end
 
   # undeletable
-
-  def test_undeletable_class_has_force_delete
-    assert_equal true,  UndeletableModel.respond_to?(:force_delete)
-  end
-
-  def test_undeletable_class_has_force_delete_all
-    assert_equal true,  UndeletableModel.respond_to?(:force_delete_all)
-  end
-
-  def test_undeletable_instance_has_force_delete
-    assert_equal true,  UndeletableModel.new.respond_to?(:force_delete)
-  end
-
-  def test_undeletable_instance_has_force_destroy
-    assert_equal true,  UndeletableModel.new.respond_to?(:force_destroy)
-  end
   
   def test_undeletable_model_instance_is_marked_undeletable
     assert_equal true, UndeletableModel.new.undeletable?
@@ -244,40 +208,6 @@ class UndeletableTest < Test::Unit::TestCase
     assert model.instance_variable_get(:@callback_called)
   end
 
-  # undeletable - force_* methods
-
-  def test_undeletable_force_delete
-    model = UndeletableModel.new
-    model.save
-    assert_equal 1, model.class.count
-    model.force_delete
-    assert_equal 0, model.class.count, "force_delete didn't delete as expected. implemented in #{model.method(:force_delete)}"
-  end
-
-  def test_undeletable_force_destroy
-    model = UndeletableModel.new
-    model.save
-    assert_equal 1, model.class.count
-    model.force_destroy
-    assert_equal 0, model.class.count
-  end
-
-  def test_undeletable_class_force_delete
-    model = UndeletableModel.new
-    model.save
-    assert_equal 1, model.class.count
-    model.class.force_delete(model.id)
-    assert_equal 0, model.class.count
-  end
-
-  def test_undeletable_class_force_delete_all
-    model = UndeletableModel.new
-    model.save
-    assert_equal 1, model.class.count
-    model.class.force_delete_all
-    assert_equal 0, model.class.count
-  end
-
   # undeletable!
 
   def test_undeletable_bang_model_instance_id_marked_undeletable
@@ -376,6 +306,58 @@ class UndeletableTest < Test::Unit::TestCase
     assert_equal 1, model.class.count
     model.destroy
     fail "should raise ActiveRecord::ReadOnlyRecord"
+  rescue ActiveRecord::ReadOnlyRecord
+    assert_equal 1, model.class.count
+  end
+
+  # relational methods
+
+  def test_undeletable_bang_where_delete_id
+    model = UndeletableBangModel.new
+    model.save
+    assert_equal 1, model.class.count
+    UndeletableBangModel.where('').delete(model.id)
+    fail "should raise ActiveRecord::ReadOnlyRecord"
+  rescue ActiveRecord::ReadOnlyRecord
+    assert_equal 1, model.class.count
+  end
+
+  def test_undeletable_bang_where_delete_ids
+    model = UndeletableBangModel.new
+    model.save
+    assert_equal 1, model.class.count
+    UndeletableBangModel.where('').delete([model.id])
+    fail "should raise ActiveRecord::ReadOnlyRecord"
+  rescue ActiveRecord::ReadOnlyRecord
+    assert_equal 1, model.class.count
+  end
+
+  def test_undeletable_bang_where_delete_all
+    model = UndeletableBangModel.new
+    model.save
+    assert_equal 1, model.class.count
+    UndeletableBangModel.where('').delete_all
+    fail "should raise ActiveRecord::ReadOnlyRecord"
+  rescue ActiveRecord::ReadOnlyRecord
+    assert_equal 1, model.class.count
+  end
+
+  def test_undeletable_bang_where_destroy_id
+    model = UndeletableBangModel.new
+    model.save
+    assert_equal 1, model.class.count
+    UndeletableBangModel.where('').destroy(model.id)
+    fail "should raise ActiveRecord::ReadOnlyRecord"
+  rescue ActiveRecord::ReadOnlyRecord
+    assert_equal 1, model.class.count
+  end
+
+  def test_undeletable_bang_where_destroy_all
+    model = UndeletableBangModel.new
+    model.save
+    assert_equal 1, model.class.count
+    UndeletableBangModel.where('').destroy_all
+    fail "should raise ActiveRecord::ReadOnlyRecord. "
   rescue ActiveRecord::ReadOnlyRecord
     assert_equal 1, model.class.count
   end

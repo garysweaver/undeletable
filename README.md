@@ -2,13 +2,11 @@
 
 # Undeletable
 
-The `undeletable` class method disables the ability to `delete`/`destroy`. The `undeletable!` class method is similar, but raises an error when those are attempted. Can support destroy callbacks if raise not enabled. Supports Rails 4 and it's new `destroy!` method.
+`undeletable` on the model class disables the ability to `delete`/`destroy` on instance, model class, and via relation, using the default ActiveRecord version of those, and supports destroy callbacks if raise not enabled. `undeletable!` on the model class will raise an error when those are attempted. `destroy!` in Rails 4 is supported.
 
-You can still override via prefixing the method name with `force_`, e.g. `force_destroy`/`force_delete`/`force_delete_all`.
+Tested with ActiveRecord 3.1.x, 3.2.x, and 4.0.x via travis and appraisal.
 
-This gem is tested against ActiveRecord 3.1.x, 3.2.x, and 4.0.x.
-
-Undeletable was originally based on [Paranoia][paranoia] (by Ryan Bigg and others), but very heavily modified.
+Code originally based on [Paranoia][paranoia] (by Ryan Bigg and others), but extremely modified to the point it really shares little in common now.
 
 ## Installation & Usage
 
@@ -63,14 +61,13 @@ end
 
 ## Upgrading
 
-* v0.0.1 -> v1.0.x: instead of using `delete!` and `destroy!`, use `force_delete` and `force_destroy`. This is because ActiveRecord v4 now has a [destroy!][rails4_destroy] method, and it made sense to avoid conflicts.
+* v0.0.1 -> v1.0.x: `delete!` and `destroy!` no longer supported for now. `destroy!` has a Rails 4 naming conflict with same named method, and attempting to provide support for ActiveRecord::Relation made it too complicated for now (problems with infinite recursion requiring more state to setup and check, etc.). If you need to delete or destroy an undeletable model, the workaround is to comment the undeletable method on the class.
 
 ## License
 
 This gem is released under the [MIT license][lic].
 
 [lic]: http://github.com/FineLinePrototyping/undeletable/blob/master/LICENSE
-[rails4_destroy]: https://github.com/rails/rails/blob/v4.0.0/activerecord/lib/active_record/persistence.rb#L169
 [paranoia]: https://github.com/radar/paranoia
 [travis]: http://travis-ci.org/FineLinePrototyping/undeletable
 [badgefury]: http://badge.fury.io/rb/undeletable
