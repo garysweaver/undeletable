@@ -2,9 +2,9 @@
 
 # Undeletable
 
-The `undeletable` class method disables the ability to `delete`/`destroy` an ActiveRecord model instance or `delete`/`delete_all` via the model's class, and `undeletable!` raises an error when those are attempted. Can support destroy callbacks if raise not enabled.
+The `undeletable` class method disables the ability to `delete`/`destroy`. The `undeletable!` class method is similar, but raises an error when those are attempted. Can support destroy callbacks if raise not enabled. Supports Rails 4 and it's new `destroy!` method.
 
-`force_destroy`/`force_delete`/`force_delete_all` are provided in case the original destroy/delete/delete_all methods must be called.
+You can still override via prefixing the method name with `force_`, e.g. `force_destroy`/`force_delete`/`force_delete_all`.
 
 This gem is tested against ActiveRecord 3.1.x, 3.2.x, and 4.0.x.
 
@@ -63,7 +63,7 @@ end
 
 ## Upgrading
 
-v0.0.1 of the gem aliased to create destroy! and delete! methods, but ActiveRecord v4 now has a [destroy!][rails4_destroy] method, so to avoid conflicts and be consistent, we've switch to force_* names for methods.
+* v0.0.1 -> v1.0.x: instead of using `delete!` and `destroy!`, use `force_delete` and `force_destroy`. This is because ActiveRecord v4 now has a [destroy!][rails4_destroy] method, and it made sense to avoid conflicts.
 
 ## License
 
