@@ -11,5 +11,5 @@ task :default do |t|
 end
 
 task :appraise => ['appraisal:install'] do |t|
-  exec 'bundle install && bundle exec rake appraisal'
+  exec 'bundle exec rake appraisal'
 end

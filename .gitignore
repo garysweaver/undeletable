@@ -1,6 +1,10 @@
 .bundle/
+.ruby-gemset
+.ruby-version
 .rvmrc
 gemfiles/
 pkg/*
+ruby-gemset
+ruby-version
 tmp/
 *.gem
