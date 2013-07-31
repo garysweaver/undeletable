@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    undeletable (1.0.0)
+    undeletable (1.0.1)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
 

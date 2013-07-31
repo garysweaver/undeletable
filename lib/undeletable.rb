@@ -73,8 +73,12 @@ class ActiveRecord::Relation
     if klass.respond_to?(:undeletable?) && klass.undeletable?
       raise ActiveRecord::ReadOnlyRecord.new("#{self} is undeletable") if klass.raise_on_delete?
       logger.debug("will not #{self}.destroy_all", e) if Undeletable.debug
-      if conditions
+      if args.length > 0 && block_given?
         where(*args, &block).to_a.each {|object| object.run_callbacks(:destroy) { delete } }.tap { reset }
+      elsif args.length > 0 && !block_given?
+        where(*args).to_a.each {|object| object.run_callbacks(:destroy) { delete } }.tap { reset }
+      elsif args.length == 0 && block_given?
+        where(&block).to_a.each {|object| object.run_callbacks(:destroy) { delete } }.tap { reset }
       else
         to_a.each {|object| object.run_callbacks(:destroy) { delete } }.tap { reset }
       end
@@ -113,8 +117,6 @@ class ActiveRecord::Base
 private
 
   def self.undeletable_init(raise_on_delete_val)
-    class_attribute :undeletable_enabled, instance_writer: true
-    self.undeletable_enabled = true
     class_attribute :raise_on_delete, instance_writer: true
     self.raise_on_delete = raise_on_delete_val
     class << self
