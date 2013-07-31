@@ -43,7 +43,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 4.0.0)
-  appraisal
-  bundler
+  appraisal (~> 0.5.2)
+  bundler (>= 1.2.2)
   sqlite3
   undeletable!
