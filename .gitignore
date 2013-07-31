@@ -1,6 +1,5 @@
 .bundle/
 .rvmrc
-gemfiles/
 pkg/*
 tmp/
 *.gem
