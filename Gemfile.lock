@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     undeletable (1.0.0)
-      activerecord (>= 3.0.0)
-      activesupport (>= 3.0.0)
+      activerecord (>= 3.1)
+      activesupport (>= 3.1)
 
 GEM
   remote: https://rubygems.org/
@@ -43,5 +43,6 @@ PLATFORMS
 
 DEPENDENCIES
   appraisal
+  bundler
   sqlite3
   undeletable!

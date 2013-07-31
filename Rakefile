@@ -14,5 +14,5 @@ task :test do |t|
 end
 
 task all: ['appraisal:install'] do |t|
-  exec 'rake appraisal test'
+  exec 'bundle exec rake appraisal test'
 end
