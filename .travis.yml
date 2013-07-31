@@ -1,6 +1,6 @@
 language: ruby
 
-script: "bundle install && bundle exec rake test"
+script: "bundle install && bundle exec rake appraisal:install && bundle exec rake test"
 
 rvm:
   - 1.9.3
