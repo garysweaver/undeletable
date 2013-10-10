@@ -18,6 +18,10 @@ module Undeletable
     def raise_on_delete?
       self.raise_on_delete
     end
+
+    def force_delete(id_or_array)
+      
+    end
     
     def delete(id_or_array)
       raise ActiveRecord::ReadOnlyRecord.new("#{self} is undeletable") if raise_on_delete?
